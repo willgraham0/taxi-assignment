@@ -2,9 +2,22 @@
 
 ## Introduction
 
+We want to create an event-driven Taxi Assignment application where customers 
+request a taxi and are assigned to available taxi drivers.
+
 ## Architecture
 
+The architecture is laid out below:
+
+![alt text][architecture]
+
 ## Usage
+
+To spin up the services enter the following command:
+
+```bash
+docker-compose up
+```
 
 ## Comments
 
@@ -19,3 +32,7 @@ service(s) need to change too. The use of Data Serialization Systems or "schema 
 should be used that each microservice can have access to.
 
 2. Sharding
+
+Two Kafka brokers are provisioned each having a shard of the three event streams.
+
+[architecture]: docs/taxi-assignment-architecture.png "architecture"
