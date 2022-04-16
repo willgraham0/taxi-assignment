@@ -1,11 +1,14 @@
 import datetime
 import json
+import logging
 import os
 
 from flask import Flask, request
 from kafka import KafkaProducer
 
 from schemas import customer_requests_taxi
+
+logging.basicConfig(level=logging.DEBUG)
 
 topic = os.environ["TOPIC"]
 client_id = os.environ["CLIENT_ID"]
@@ -30,4 +33,5 @@ def taxi():
     )
     producer.send(topic=topic, value=event)
 
-    return f"Customer #{customer_id} {customer_name} requests Taxi."
+    logging.info(f"Customer #{customer_id} {customer_name} requests Taxi.")
+    return 200
