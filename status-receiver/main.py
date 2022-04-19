@@ -26,7 +26,6 @@ def taxi():
     """
     driver_id = request.args["customer_id"]
     timestamp = datetime.datetime.now().timestamp()
-
     status = request.args["status"]
 
     event = driver_changes_status(driver_id, status, timestamp)
