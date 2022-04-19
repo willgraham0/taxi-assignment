@@ -25,12 +25,11 @@ def taxi():
     The status Must be one of: ONLINE, OFFLINE, AVAILABLE, UNAVAILABLE.
     """
     driver_id = request.args["customer_id"]
-    driver_name = request.args["customer_name"]
     timestamp = datetime.datetime.now().timestamp()
 
     status = request.args["status"]
 
-    event = driver_changes_status(driver_id, driver_name, status, timestamp)
+    event = driver_changes_status(driver_id, status, timestamp)
     producer = KafkaProducer(
         bootstrap_servers=f"{broker_host}:{broker_port}",
         value_serializer=lambda value: json.dumps(value).encode('utf-8'),
@@ -38,5 +37,5 @@ def taxi():
     )
     producer.send(topic=topic, value=event)
 
-    logging.warning(f"Driver #{driver_id} {driver_name} changes status to {status}.")
+    logging.warning(f"Driver #{driver_id} changes status to {status}.")
     return 200
