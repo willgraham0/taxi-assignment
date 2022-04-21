@@ -1,3 +1,4 @@
+import ast
 import datetime
 import json
 import logging
@@ -9,7 +10,7 @@ from redis import Redis
 
 from schemas import assign_customer_to_driver
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 broker_host = os.environ["BROKER_HOST"]
 broker_port = os.environ["BROKER_PORT"]
@@ -31,7 +32,6 @@ producer = KafkaProducer(
 consumer = KafkaConsumer(
     *sub_topics,
     bootstrap_servers=f"{broker_host}:{broker_port}",
-    value_deserializer=lambda value: json.dumps(value.decode('utf-8')),
     group_id=group_id,
     client_id=client_id,
 )
@@ -54,7 +54,9 @@ def assign():
     (If driver does not exist, assume driver's status is "unavailable".)
     """
     for event in consumer:
+        event = ast.literal_eval(event.value.decode("utf-8"))
         event_type = event["event"]
+
         if event_type == "CUSTOMER_REQUESTS_TAXI":
             customer_id = event["customer"]["id"]
             available_driver = get_available_driver()
@@ -69,7 +71,7 @@ def assign():
 
         elif event_type == "DRIVER_CHANGES_STATUS":
             driver_id = event["driver"]["id"]
-            status = event["status"]["status"]
+            status = event["status"]
             store.set(driver_id, status)
         else:
             logging.info(f"Unknown event was consumed and ignored.")
