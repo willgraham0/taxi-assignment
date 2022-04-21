@@ -29,10 +29,10 @@ def taxi():
 
     The status Must be one of: AVAILABLE, UNAVAILABLE.
     """
-    driver_id = request.args["customer_id"]
+    driver_id = request.args["driver_id"]
     timestamp = datetime.datetime.now().timestamp()
     status = request.args["status"]
     event = driver_changes_status(driver_id, status, timestamp)
     producer.send(topic=topic, value=event)
     logging.warning(f"Driver #{driver_id} changes status to {status}.")
-    return 200
+    return "200"

@@ -31,4 +31,4 @@ def taxi():
     event = customer_requests_taxi(customer_id, timestamp)
     producer.send(topic=topic, value=event)
     logging.info(f"Customer #{customer_id} requests Taxi.")
-    return 200
+    return "200"

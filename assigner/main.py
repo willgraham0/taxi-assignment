@@ -31,7 +31,7 @@ producer = KafkaProducer(
 consumer = KafkaConsumer(
     *sub_topics,
     bootstrap_servers=f"{broker_host}:{broker_port}",
-    value_deserializer=lambda value: json.dumps(value).encode('utf-8'),
+    value_deserializer=lambda value: json.dumps(value.decode('utf-8')),
     group_id=group_id,
     client_id=client_id,
 )
