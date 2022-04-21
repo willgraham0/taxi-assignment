@@ -62,7 +62,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - SUB_TOPICS=requests,status-changes
-      - PUB_TOPIC=assignments-commands
+      - ASSIGNMENTS_TOPIC=assignments-commands
+      - REQUESTS_TOPIC=requests
       - CLIENT_ID=assigner
       - GROUP_ID=assigner
       - BROKER_HOST=broker
