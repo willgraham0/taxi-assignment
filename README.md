@@ -3,7 +3,7 @@
 ## Introduction
 
 We want to create an event-driven Taxi Assignment application where customers 
-request a taxi and are assigned to available taxi drivers.
+request a taxi and are assigned to available taxi drivers making use of Apache Kafka.
 
 ## Architecture
 
