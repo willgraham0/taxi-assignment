@@ -12,7 +12,7 @@ from schemas import assign_customer_to_driver
 
 logging.basicConfig(level=logging.INFO)
 
-bootstrap_servers = os.environ["BOOTSTRAP_SERVERS"]
+bootstrap_server = os.environ["BOOTSTRAP_SERVER"]
 requests_topic = os.environ["REQUESTS_TOPIC"]
 assignments_topic = os.environ["ASSIGNMENTS_TOPIC"]
 sub_topics = os.environ["SUB_TOPICS"].split(",")
@@ -24,13 +24,13 @@ redis_db = os.environ["REDIS_DB"]
 
 store = Redis(host=redis_host, port=int(redis_port), db=int(redis_db))
 producer = KafkaProducer(
-    bootstrap_servers=bootstrap_servers,
+    bootstrap_servers=bootstrap_server,
     value_serializer=lambda value: json.dumps(value).encode('utf-8'),
     client_id=client_id,
 )
 consumer = KafkaConsumer(
     *sub_topics,
-    bootstrap_servers=bootstrap_servers,
+    bootstrap_servers=bootstrap_server,
     group_id=group_id,
     client_id=client_id,
 )

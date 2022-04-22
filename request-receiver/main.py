@@ -12,11 +12,11 @@ logging.basicConfig(level=logging.DEBUG)
 
 topic = os.environ["TOPIC"]
 client_id = os.environ["CLIENT_ID"]
-bootstrap_servers = os.environ["BOOTSTRAP_SERVERS"]
+bootstrap_server = os.environ["BOOTSTRAP_SERVER"]
 
 app = Flask(__name__)
 producer = KafkaProducer(
-    bootstrap_servers=bootstrap_servers,
+    bootstrap_servers=bootstrap_server,
     value_serializer=lambda value: json.dumps(value).encode('utf-8'),
     client_id=client_id,
 )
