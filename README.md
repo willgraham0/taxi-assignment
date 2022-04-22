@@ -29,7 +29,7 @@ they produce and consume. In this example the event structures are repeatedly de
 of the microservices in which they are relevant. This is not ideal since if the schema of 
 an event of a producing service changes then the schema definition of the consuming
 service(s) need to change too. The use of a Data Serialization System or "Schema Registry"
-should be used that each microservice can have access to and reads during the start-up phase
+should be used that each microservice can have access to during the start-up phase
 of the application.
 
 2. Sharding/Partitioning.
