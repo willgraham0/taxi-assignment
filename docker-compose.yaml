@@ -75,14 +75,6 @@ services:
   redis:
     image: redis:6.2
 
-#  notifier:
-#    build:
-#      context: ./notifier
-#      dockerfile: Dockerfile
-#      environment:
-#        - TOPICs=assignments
-#        - GROUP_ID=notifier
-
 volumes:
   zookeeper_data:
     driver: local
