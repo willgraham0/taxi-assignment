@@ -42,4 +42,4 @@ can be captured as events in themselves and placed in dedicated failure topics.
 
 Two Kafka brokers are provisioned each having a shard of the three event streams.
 
-[architecture]: docs/taxi-assignment-architecture.png "architecture"
+[architecture]: docs/taxi-assignment.png "architecture"
