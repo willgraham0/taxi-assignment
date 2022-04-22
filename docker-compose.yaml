@@ -30,8 +30,7 @@ services:
       - FLASK_APP=main
       - TOPIC=requests
       - CLIENT_ID=request-receiver
-      - BROKER_HOST=broker
-      - BROKER_PORT=9092
+      - BOOTSTRAP_SERVERS=broker:9092
     ports:
       - 8080:5000
     depends_on:
@@ -46,8 +45,7 @@ services:
       - FLASK_APP=main
       - TOPIC=status-changes
       - CLIENT_ID=status-receiver
-      - BROKER_HOST=broker
-      - BROKER_PORT=9092
+      - BOOTSTRAP_SERVERS=broker:9092
     ports:
       - 8081:5000
     depends_on:
@@ -63,8 +61,7 @@ services:
       - REQUESTS_TOPIC=requests
       - CLIENT_ID=assigner
       - GROUP_ID=assigner
-      - BROKER_HOST=broker
-      - BROKER_PORT=9092
+      - BOOTSTRAP_SERVERS=broker:9092
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=1
