@@ -13,7 +13,7 @@ from schemas import assign_customer_to_driver
 logging.basicConfig(level=logging.INFO)
 
 bootstrap_server = os.environ["BOOTSTRAP_SERVER"]
-rejected_requests_topic = os.environ["- REJECTED_REQUESTS_TOPIC"]
+rejected_requests_topic = os.environ["REJECTED_REQUESTS_TOPIC"]
 assignments_topic = os.environ["ASSIGNMENTS_TOPIC"]
 sub_topics = os.environ["SUB_TOPICS"].split(",")
 client_id = os.environ["CLIENT_ID"]
