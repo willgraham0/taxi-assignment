@@ -8,7 +8,7 @@ from typing import Optional
 from kafka import KafkaConsumer, KafkaProducer
 from redis import Redis
 
-from schemas import assign_customer_to_driver
+from schemas import assign_customer_to_driver, customer_request_rejected
 
 logging.basicConfig(level=logging.INFO)
 
@@ -39,8 +39,9 @@ consumer = KafkaConsumer(
 def get_available_driver() -> Optional[str]:
     """Return an available driver."""
     for driver_id in store.scan_iter():
-        if store.get(driver_id) == "AVAILABLE":
-            return driver_id
+        status = store.get(driver_id).decode("utf-8")
+        if status == "AVAILABLE":
+            return driver_id.decode("utf-8")
 
 
 def assign():
@@ -55,6 +56,7 @@ def assign():
     """
     try:
         for event in consumer:
+            timestamp = datetime.datetime.now().timestamp()
             event = ast.literal_eval(event.value.decode("utf-8"))
             event_type = event["event"]
 
@@ -66,9 +68,10 @@ def assign():
                     assignment = assign_customer_to_driver(customer_id, available_driver, timestamp)
                     producer.send(topic=assignments_topic, value=assignment)
                     logging.info(f"Customer #{customer_id} assigned to Driver #{available_driver}.")
+                    store.set(available_driver, "UNAVAILABLE")
                 else:
                     logging.info(f"No drivers are currently available.")
-                    producer.send(topic=rejected_requests_topic, value=event)
+                    producer.send(topic=rejected_requests_topic, value=customer_request_rejected(event, timestamp))
 
             elif event_type == "DRIVER_CHANGES_STATUS":
                 driver_id = event["driver"]["id"]

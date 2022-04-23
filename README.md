@@ -39,5 +39,8 @@ and subsequently use.
 Internal application exceptions (known or unknown such as invalid schema validation or bugs) 
 can be captured as events in themselves and placed in dedicated failure topics.
 
+4. Restarting the applications.
+
+Effect on offset...
 
 [architecture]: docs/taxi-assignment.png "architecture"

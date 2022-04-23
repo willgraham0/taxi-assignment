@@ -12,3 +12,11 @@ def assign_customer_to_driver(customer_id: str, driver_id: str, timestamp: float
         },
         "timestamp": timestamp,
     }
+
+
+def customer_request_rejected(request: Dict, timestamp: float) -> Dict:
+    return {
+        "event": "CUSTOMER_REQUEST_REJECTED",
+        "request": request,
+        "timestamp": timestamp,
+    }
