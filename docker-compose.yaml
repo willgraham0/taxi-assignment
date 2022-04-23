@@ -68,7 +68,7 @@ services:
     environment:
       - SUB_TOPICS=requests,status-changes
       - ASSIGNMENTS_TOPIC=assignments-commands
-      - REQUESTS_TOPIC=requests
+      - REJECTED_REQUESTS_TOPIC=rejected-requests
       - CLIENT_ID=assigner
       - GROUP_ID=assigner
       - BOOTSTRAP_SERVER=broker:9092

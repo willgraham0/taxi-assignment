@@ -13,7 +13,7 @@ from schemas import assign_customer_to_driver
 logging.basicConfig(level=logging.INFO)
 
 bootstrap_server = os.environ["BOOTSTRAP_SERVER"]
-requests_topic = os.environ["REQUESTS_TOPIC"]
+rejected_requests_topic = os.environ["- REJECTED_REQUESTS_TOPIC"]
 assignments_topic = os.environ["ASSIGNMENTS_TOPIC"]
 sub_topics = os.environ["SUB_TOPICS"].split(",")
 client_id = os.environ["CLIENT_ID"]
@@ -47,33 +47,39 @@ def assign():
     """Assign drivers to customer taxi requests.
 
     Subscribe to the "requests" and "status-changes" topics.
-    On a "status-changes" event, set "driver": "status" key/value pair.
-    On a "requests" event, get all driver who have a status of "available", select the first driver,
+    On a "status-changes" event, set a "driver": "status" key/value pair.
+    On a "requests" event, get all drivers who have a status of "available", select the first driver,
     emit "assign-commands" event and set the driver's status to "unavailable".
     (If driver does not exist, assume driver's status is "unavailable".)
+    If no drivers are available emit a rejected-request event.
     """
-    for event in consumer:
-        event = ast.literal_eval(event.value.decode("utf-8"))
-        event_type = event["event"]
+    try:
+        for event in consumer:
+            event = ast.literal_eval(event.value.decode("utf-8"))
+            event_type = event["event"]
 
-        if event_type == "CUSTOMER_REQUESTS_TAXI":
-            customer_id = event["customer"]["id"]
-            available_driver = get_available_driver()
-            if available_driver is not None:
-                timestamp = datetime.datetime.now().timestamp()
-                assignment = assign_customer_to_driver(customer_id, available_driver, timestamp)
-                producer.send(topic=assignments_topic, value=assignment)
-                logging.info(f"Customer #{customer_id} assigned to Driver #{available_driver}.")
+            if event_type == "CUSTOMER_REQUESTS_TAXI":
+                customer_id = event["customer"]["id"]
+                available_driver = get_available_driver()
+                if available_driver is not None:
+                    timestamp = datetime.datetime.now().timestamp()
+                    assignment = assign_customer_to_driver(customer_id, available_driver, timestamp)
+                    producer.send(topic=assignments_topic, value=assignment)
+                    logging.info(f"Customer #{customer_id} assigned to Driver #{available_driver}.")
+                else:
+                    logging.info(f"No drivers are currently available.")
+                    producer.send(topic=rejected_requests_topic, value=event)
+
+            elif event_type == "DRIVER_CHANGES_STATUS":
+                driver_id = event["driver"]["id"]
+                status = event["status"]
+                store.set(driver_id, status)
             else:
-                logging.info(f"No drivers are currently available.")
-                producer.send(topic=requests_topic, value=event)
-
-        elif event_type == "DRIVER_CHANGES_STATUS":
-            driver_id = event["driver"]["id"]
-            status = event["status"]
-            store.set(driver_id, status)
-        else:
-            logging.info(f"Unknown event was consumed and ignored.")
+                logging.info(f"Unknown event was consumed and ignored.")
+    except KeyboardInterrupt:
+        pass
+    finally:
+        consumer.close()
 
 
 if __name__ == "__main__":
