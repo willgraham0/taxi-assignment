@@ -67,7 +67,7 @@ services:
       - broker
     environment:
       - SUB_TOPICS=requests,status-changes
-      - ASSIGNMENTS_TOPIC=assignments-commands
+      - ASSIGNMENTS_TOPIC=assign-commands
       - REJECTED_REQUESTS_TOPIC=rejected-requests
       - CLIENT_ID=assigner
       - GROUP_ID=assigner
