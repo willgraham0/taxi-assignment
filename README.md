@@ -73,6 +73,4 @@ can be captured as events in themselves and placed in dedicated failure topics.
 Consumers that have been restarted consume events from where they left off. This is because the offset
 on each partition for a given consumer group is stored on the broker containing that partition. 
 
-Effect on offset...
-
 [architecture]: docs/taxi-assignment.png "architecture"
